@@ -15,6 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 
 /**
  * @Route("/api", name="client")
@@ -23,6 +26,16 @@ class ClientController extends AbstractController
 {
     /**
      * @Route("/client/{id}", name="show_client", methods={"GET"})
+     * @SWG\Tag(name="Client")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the informations of a client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=Client::class, groups={"full"}))
+     *     )
+     * )
      */
     public function show(Client $client, ClientRepository $clientRepository, SerializerInterface $serializer, ValidatorInterface $validator)
     {
@@ -49,6 +62,16 @@ class ClientController extends AbstractController
     /**
      * @Route("/clients", name="list_client", methods={"GET"})
      * @Route("/clients/{page}", name="list_client_paginated", methods={"GET"})
+     * @SWG\Tag(name="Client")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the list of clients",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=Client::class, groups={"full"}))
+     *     )
+     * )
      */
     public function index(Request $request, SerializerInterface $serializer, int $page = null)
     {
@@ -70,6 +93,16 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/client", name="add_client", methods={"POST"})
+     * @SWG\Tag(name="Client")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Add a new client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={"first_name": "fname", "last_name": "lname", "email": "example@email.com"},
+     *         @SWG\Items(ref=@Model(type=Client::class, groups={"full"}))
+     *     )
+     * )
      */
     public function add(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {
@@ -88,7 +121,7 @@ class ClientController extends AbstractController
         $entityManager->flush();
         $data = [
             'status' => 201,
-            'message' => 'Client has been added successfully'
+            'message' => 'Client has been added successfully, see it at (GET) /api/client/' . $client->getId()
         ];
 
         return new JsonResponse($data, 201);
@@ -96,6 +129,16 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/client/{id}", name="update_client", methods={"PUT"})
+     * @SWG\Tag(name="Client")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Edit an existing client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={"email": "newemail@email.com"},
+     *         @SWG\Items(ref=@Model(type=Client::class, groups={"full"}))
+     *     )
+     * )
      */
     public function update(Request $request, SerializerInterface $serializer, Client $client, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -136,6 +179,16 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/client/{id}", name="delete_client", methods={"DELETE"})
+     * @SWG\Tag(name="Client")
+     * @SWG\Response(
+     *     response=204,
+     *     description="Delete an existing client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=Client::class, groups={"full"}))
+     *     )
+     * )
      */
     public function delete(Client $client, EntityManagerInterface $entityManager)
     {
@@ -153,7 +206,7 @@ class ClientController extends AbstractController
         }
 
         $data = [
-            'status' => 200,
+            'status' => 204,
             'message' => 'Client successfully deleted'
         ];
         return new JsonResponse($data);

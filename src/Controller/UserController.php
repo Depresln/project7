@@ -13,6 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 
 /**
  * @Route("/api", name="user")
@@ -21,6 +24,16 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/user/{id}", name="show_user", methods={"GET"})
+     * @SWG\Tag(name="User")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the informations of an user (ADMIN ONLY)",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=User::class, groups={"full"}))
+     *     )
+     * )
      * @IsGranted("ROLE_ADMIN")
      */
     public function show(User $user, UserRepository $userRepository, SerializerInterface $serializer)
@@ -38,6 +51,16 @@ class UserController extends AbstractController
     /**
      * @Route("/users", name="list_user", methods={"GET"})
      * @Route("/users/{page}", name="list_user_paginated", methods={"GET"})
+     * @SWG\Tag(name="User")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the user list (ADMIN ONLY)",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=User::class, groups={"full"}))
+     *     )
+     * )
      * @IsGranted("ROLE_ADMIN")
      */
     public function index(Request $request, UserRepository $userRepository, SerializerInterface $serializer, int $page = null)
@@ -58,6 +81,16 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/{id}", name="update_user", methods={"PUT"})
+     * @SWG\Tag(name="User")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Edit an existing user (ADMIN ONLY)",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={"username": "user2"},
+     *         @SWG\Items(ref=@Model(type=User::class, groups={"full"}))
+     *     )
+     * )
      * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, SerializerInterface $serializer, User $user, ValidatorInterface $validator, EntityManagerInterface $entityManager)
@@ -92,6 +125,16 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/{id}", name="delete_user", methods={"DELETE"})
+     * @SWG\Tag(name="User")
+     * @SWG\Response(
+     *     response=204,
+     *     description="Delete an existing user (ADMIN ONLY)",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=User::class, groups={"full"}))
+     *     )
+     * )
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(User $user, EntityManagerInterface $entityManager)

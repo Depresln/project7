@@ -13,6 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 
 /**
  * @Route("/api", name="phone")
@@ -21,6 +24,16 @@ class PhoneController extends AbstractController
 {
     /**
      * @Route("/phone/{id}", name="show_phone", methods={"GET"})
+     * @SWG\Tag(name="Phone")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the informations of a phone",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=Phone::class, groups={"full"}))
+     *     )
+     * )
      */
     public function show(Phone $phone, PhoneRepository $phoneRepository, SerializerInterface $serializer)
     {
@@ -37,6 +50,16 @@ class PhoneController extends AbstractController
     /**
      * @Route("/phones", name="list_phone", methods={"GET"})
      * @Route("/phones/{page}", name="list_phone_paginated", methods={"GET"})
+     * @SWG\Tag(name="Phone")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the list of phones",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=Phone::class, groups={"full"}))
+     *     )
+     * )
      */
     public function index(Request $request, PhoneRepository $phoneRepository, SerializerInterface $serializer, int $page = null)
     {
@@ -56,6 +79,16 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phone", name="add_phone", methods={"POST"})
+     * @SWG\Tag(name="Phone")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Post a new phone (ADMIN ONLY)",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={"name": "new phone", "price": "1000", "description": "phone description"},
+     *         @SWG\Items(ref=@Model(type=Phone::class, groups={"full"}))
+     *     )
+     * )
      * @IsGranted("ROLE_ADMIN")
      */
     public function add(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator)
@@ -82,6 +115,16 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phone/{id}", name="update_phone", methods={"PUT"})
+     * @SWG\Tag(name="Phone")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Edit an existing phone (ADMIN ONLY)",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={"price": "1200"},
+     *         @SWG\Items(ref=@Model(type=Phone::class, groups={"full"}))
+     *     )
+     * )
      * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, SerializerInterface $serializer, Phone $phone, ValidatorInterface $validator, EntityManagerInterface $entityManager)
@@ -116,6 +159,16 @@ class PhoneController extends AbstractController
 
     /**
      * @Route("/phone/{id}", name="delete_phone", methods={"DELETE"})
+     * @SWG\Tag(name="Phone")
+     * @SWG\Response(
+     *     response=204,
+     *     description="Delete an existing phone (ADMIN ONLY)",
+     *     @SWG\Schema(
+     *         type="array",
+     *         example={},
+     *         @SWG\Items(ref=@Model(type=Phone::class, groups={"full"}))
+     *     )
+     * )
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Phone $phone, EntityManagerInterface $entityManager)
